@@ -4,8 +4,7 @@ function serviceCard(service) {
   const features = service.features.map(item => `<li>${item}</li>`).join("");
   return `<article class="service-card">
     <div class="service-media">
-      <img class="service-image" src="${service.image}" alt="${service.title} in action" loading="lazy"
-           onerror="this.style.display='none';this.parentElement.classList.add('image-fallback')">
+      <img class="service-image" src="${service.image}" alt="${service.title} in action" loading="lazy">
     </div>
     <div class="service-copy">
       <span class="service-icon">${service.tag}</span><h3>${service.title}</h3>
@@ -15,6 +14,11 @@ function serviceCard(service) {
 }
 const serviceContainer = document.getElementById("services-container");
 if (serviceContainer) {
+  serviceContainer.addEventListener("error", event => {
+    if (event.target instanceof HTMLImageElement && event.target.matches(".service-image")) {
+      event.target.classList.add("image-unavailable");
+    }
+  }, true);
   const fullPage = document.body.classList.contains("all-services");
   serviceContainer.innerHTML = (fullPage ? services : services.slice(0,3)).map(serviceCard).join("");
 }
